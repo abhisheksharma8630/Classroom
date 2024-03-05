@@ -1,1 +1,2 @@
-#Classroom a web app where teacher can create question to its student
+# Classroom 
+A web app where **teacher** can create question to for **students**
