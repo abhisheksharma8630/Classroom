@@ -1,0 +1,52 @@
+<% layout("/layout/boilerplate") %>
+<body>
+  <div class="d-flex position-absolute top-50 start-50 translate-middle" style="width: max-content;">
+    <div class="p-5">
+      <h3>Welcome to classroom</h3>
+      <form action="/login" method="post">
+        <div class="mb-3">
+          <label for="username" class="form-label"
+            >Username</label
+          >
+          <input
+            type="text"
+            name="username"
+            class="form-control"
+            id="username"
+            placeholder="jondoe@123"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label"
+            >Password</label
+          >
+          <input
+            type="password"
+            name="password"
+            class="form-control"
+            id="password"
+            placeholder="jon*****"
+          />
+        </div>
+        <button class="btn btn-primary mb-3" type="submit">Login</button>
+      </form>
+      <p>
+        Don't have an account yet?<a
+          href="/signup"
+          class="ms-1"
+          >Signup</a
+        >
+      </p>
+      <h5 class="text-center mb-3">OR</h5>
+      <a href="/auth/google" class="btn btn-secondary w-100"
+        ><img
+          src="google-icon-logo-svgrepo-com.png"
+          alt=""
+          class="img-fluid me-2"
+          style="max-width: 20px; min-width: 20"
+        />Log in with google</a
+      >
+    </div>
+    <img src="image1.jpg" class="rounded" style="height: 500px; width: 400px; object-fit: cover;" alt="this is image">
+  </div>
+</body>

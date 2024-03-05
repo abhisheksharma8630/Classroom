@@ -1,0 +1,41 @@
+<%  layout("/layout/boilerplate")%>
+
+<body>
+    <h1 class="cursor-pointer"><%= test?.title%></h1>
+    <div class="bg-red-700">
+        <% test?.questions.forEach((element)=>{ %> 
+            <p>Question: <%= element.question%></p>
+            <h4><%= element.correctAnswer%></h4>
+            <p><%= element.options[0]%></p>
+            <p><%= element.options[1]%></p>
+            <p><%= element.options[2]%></p>
+        <%})%>
+    </div>
+        <h3>Add Question</h3>
+        <form action="/tests/<%=test?._id%>/question" method="post">
+            <div>
+                <label for="question">Question</label>
+                <input class="options" type="text" name="question" required>
+            </div>
+            <div class="flex gap-4 mt-4">
+                <div>
+                    <label for="correctAnswer">Correct Answer</label>
+                    <input class="options" type="text" name="correctAnswer" required placeholder="Correct Answer">
+                </div>
+                <div>
+                    <label for="option">Other Option</label>
+                    <input class="options" type="text" name="options" required>
+                </div>
+                <div>
+                    <label for="option">Other Option</label>
+                    <input class="options" type="text" name="options" required>
+                </div>
+                <div>
+                    <label for="option">Other Option</label>
+                    <input class="options" type="text" name="options" required>
+                </div>
+            </div>
+            <button class="button">Add Question</button>
+        </form>
+</body>
+    

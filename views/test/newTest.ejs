@@ -1,0 +1,52 @@
+<% layout("/layout/boilerplate")%>
+
+<body>
+    <form action="/tests" method="post">
+        <div class="mb-3">
+            <label for="title" class="form-label">Test Name</label>
+            <input type="text" id="title" name="title" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input class="form-control" type="date" id="date" name="date"  value="2024-03-01" max="2024-12-31" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="liveAt">Time</label>
+            <input type="time" id="testTime" class="form-control" name="date" value="00:00" required>
+        </div>
+        <button class="btn btn-primary" type="submit">Add Test</button>
+    </form>
+</body>
+
+<script>
+        let date = document.querySelector("#date");
+        let todayDate = new Date();
+        let tMonth = "";
+        let tDate = "";
+        if(todayDate.getMonth()+1<10){
+            let temp = todayDate.getMonth()+1;
+            tMonth = "0"+temp;
+        }
+        console.log(tMonth)
+        if(todayDate.getDate()<10){
+            tDate = "0"+todayDate.getDate();
+        }
+        let today = `${todayDate.getFullYear()}-${tMonth}-${tDate}`;
+        console.log(today);
+        date.setAttribute('min',today);
+        date.setAttribute('value',today);
+        let testTime = document.querySelector("#testTime");
+        testTime.setAttribute('min',`${todayDate.getHours()}:${todayDate.getMinutes()}`);
+        date.addEventListener("change",()=>{
+            console.log("Updated");
+            console.log(date.value);
+            if(date.value == today){
+                console.log("yes its' equal");
+                testTime.setAttribute('min',`${todayDate.getHours()}:${todayDate.getMinutes()}`);
+            }else{
+                testTime.setAttribute('min',"");
+            }
+        })
+</script>
