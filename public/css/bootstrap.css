@@ -2,3 +2,56 @@
     cursor: pointer;
 }
 
+.navbar {
+    margin: 0;
+    padding: 0;
+    /* overflow: hidden; */
+} 
+
+.navbar li a {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 1px 14px;
+    text-decoration: none;
+}
+
+.sub-options {
+    display: none;
+    position: absolute;
+    min-width: 120px;
+    /* box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); */
+    padding: 12px;
+    z-index: 1;
+}
+
+.navbar li:hover .sub-options {
+    display: block;
+}
+
+.sub-options a:hover {
+    text-decoration: underline;
+}
+
+.w-40{
+    width: 40%;
+}
+
+.h-60{
+    height: 60%;
+}
+
+.all-tests{
+    height: 85vh;
+}
+
+.tests{
+    height: 70vh;
+    padding: 1rem;
+    overflow: scroll;
+}
+.questions{
+    height: 70vh;
+    padding: 1rem;
+    overflow: scroll;
+}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hover Options</title>
+<style>
+    .navbar {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        background-color: #333;
+        overflow: hidden;
+    } 
+
+    .navbar li {
+        float: left;
+    }
+
+    .navbar li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    .navbar li a:hover {
+        background-color: #111;
+    }
+
+    .sub-options {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 120px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        padding: 12px;
+        z-index: 1;
+    }
+
+    .navbar li:hover .sub-options {
+        display: block;
+    }
+
+    .sub-options a:hover {
+        text-decoration: underline;
+    }
+</style>
+</head>
+<body>
+
+<ul class="navbar">
+    <li><a href="#">Home</a></li>
+    <li>
+        <a href="#">Products</a>
+        <div class="sub-options">
+            <a href="#">Product 1</a>
+            <a href="#">Product 2</a>
+            <a href="#">Product 3</a>
+        </div>
+    </li>
+    <li>
+        <a href="#">Services</a>
+        <div class="sub-options">
+            <a href="#">Service 1</a>
+            <a href="#">Service 2</a>
+            <a href="#">Service 3</a>
+        </div>
+    </li>
+    <li><a href="#">About</a></li>
+</ul>
+
+</body>
+</html>
