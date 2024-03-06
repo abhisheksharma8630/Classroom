@@ -23,28 +23,37 @@
 <script>
         let date = document.querySelector("#date");
         let todayDate = new Date();
-        let tMonth = "";
-        let tDate = "";
-        if(todayDate.getMonth()+1<10){
-            let temp = todayDate.getMonth()+1;
-            tMonth = "0"+temp;
+        let tMonth = todayDate.getMonth()+1;
+        let tDate = todayDate.getDate();
+        let tMinute = todayDate.getMinutes();
+        let tHour = todayDate.getHours();
+
+
+        if(tMonth<10){
+            tMonth = "0"+tMonth;
         }
-        console.log(tMonth)
-        if(todayDate.getDate()<10){
-            tDate = "0"+todayDate.getDate();
+        if(tDate<10){
+            tDate = "0"+tDate;
+        }
+        if(tMinute<10){
+            tMinute = "0"+tMinute;
+        }
+        if(tHour<10){
+            tHour = "0"+tHour;
         }
         let today = `${todayDate.getFullYear()}-${tMonth}-${tDate}`;
         console.log(today);
         date.setAttribute('min',today);
         date.setAttribute('value',today);
         let testTime = document.querySelector("#testTime");
-        testTime.setAttribute('min',`${todayDate.getHours()}:${todayDate.getMinutes()}`);
+        testTime.setAttribute('min',`${tHour}:${tMinute}`);
+        console.log(`${tHour}:${tMinute}`)
         date.addEventListener("change",()=>{
             console.log("Updated");
             console.log(date.value);
             if(date.value == today){
                 console.log("yes its' equal");
-                testTime.setAttribute('min',`${todayDate.getHours()}:${todayDate.getMinutes()}`);
+                testTime.setAttribute('min',`${tHour}:${tMinute}`);
             }else{
                 testTime.setAttribute('min',"");
             }

@@ -105,7 +105,7 @@ const isUser =  async (req,res,next)=>{
             next();
         }else{
             res.flash("error","You are not the owner of the test");
-            next();
+            next(new Error("Yeh user hai hi nahi"));
         }
     }else{
         res.flash("error","NO test exists!!");
@@ -183,9 +183,7 @@ app.post('/tests', isLoggedIn,async (req,res)=>{
     }
     const googleUser = await User.findOne({_id:req.user._id});
     let testBody = req.body;
-    // testBody = {...testBody,liveAt : new Date(`${req.body.date[0]} ${req.body.date[1]}`)};
     testBody = {title: req.body.title,liveAt : new Date(req.body.date)};
-    // console.log(testBody);
     const newtest = new Test(testBody);
     newtest.owner = googleUser._id;
     googleUser.tests.push(newtest);
@@ -198,6 +196,8 @@ app.post('/tests', isLoggedIn,async (req,res)=>{
 app.delete('/tests/:id',isLoggedIn,isUser,async(req,res)=>{
     const {id} = req.params;
     let temp = await test.findByIdAndDelete(id);
+    console.log(temp);
+    await User.findByIdAndUpdate(temp.owner,{$pull:{tests:id}});
     console.log("deleted successfully");
     res.redirect('/');
 })
@@ -213,6 +213,8 @@ app.get('/tests/:id',isLoggedIn,async (req,res)=>{
 
 
 // add question to test
+
+
 app.post('/tests/:id/question',isLoggedIn,async (req,res)=>{
     const {id} = req.params;
     const test = await Test.findById(id);

@@ -1,41 +1,92 @@
-<%  layout("/layout/boilerplate")%>
+<% layout("/layout/boilerplate")%>
 
 <body>
-    <h1 class="cursor-pointer"><%= test?.title%></h1>
+  <h1 class="cursor-pointer"><%= test?.title%></h1>
+  <div class="d-flex flex-row-reverse justify-content-around">
     <div class="bg-red-700">
-        <% test?.questions.forEach((element)=>{ %> 
-            <p>Question: <%= element.question%></p>
-            <h4><%= element.correctAnswer%></h4>
-            <p><%= element.options[0]%></p>
-            <p><%= element.options[1]%></p>
-            <p><%= element.options[2]%></p>
+      <% test?.questions.forEach((element)=>{ %>
+      <p class="h5">Question: <%= element.question%></p>
+      <div           style="
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 10px;
+    ">
+        <p class="btn btn-success"><%= element.correctAnswer%></p>
+        <p class="btn btn-secondary"><%= element.options[0]%></p>
+        <p class="btn btn-secondary"><%= element.options[1]%></p>
+        <p class="btn btn-secondary"><%= element.options[2]%></p>
+      </div>
         <%})%>
     </div>
-        <h3>Add Question</h3>
-        <form action="/tests/<%=test?._id%>/question" method="post">
-            <div>
-                <label for="question">Question</label>
-                <input class="options" type="text" name="question" required>
-            </div>
-            <div class="flex gap-4 mt-4">
-                <div>
-                    <label for="correctAnswer">Correct Answer</label>
-                    <input class="options" type="text" name="correctAnswer" required placeholder="Correct Answer">
-                </div>
-                <div>
-                    <label for="option">Other Option</label>
-                    <input class="options" type="text" name="options" required>
-                </div>
-                <div>
-                    <label for="option">Other Option</label>
-                    <input class="options" type="text" name="options" required>
-                </div>
-                <div>
-                    <label for="option">Other Option</label>
-                    <input class="options" type="text" name="options" required>
-                </div>
-            </div>
-            <button class="button">Add Question</button>
-        </form>
+    <div>
+      <h3>Add Question</h3>
+      <form action="/tests/<%=test?._id%>/question" method="post">
+        <div class="mb-3">
+          <label for="question" class="form-label">Question</label>
+          <input
+            type="text"
+            name="question"
+            class="form-control"
+            id="question"
+            placeholder="Type Your Question here ..."
+            required
+          />
+        </div>
+        <div
+          class="grid"
+          style="
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 10px;
+          "
+        >
+          <div class="mb-3 g-col-6">
+            <label for="correctAnswer" class="form-label">Correct Answer</label>
+            <input
+              type="text"
+              name="correctAnswer"
+              class="form-control"
+              id="correctAnswer"
+              placeholder="Correct Answer"
+              required
+            />
+          </div>
+          <div class="mb-3 g-col-6">
+            <label for="options" class="form-label">Other Option</label>
+            <input
+              type="text"
+              name="options"
+              class="form-control"
+              id="options"
+              placeholder="Other Option"
+              required
+            />
+          </div>
+          <div class="mb-3 g-col-6">
+            <label for="options" class="form-label">Other Option</label>
+            <input
+              type="text"
+              name="options"
+              class="form-control"
+              id="options"
+              placeholder="Other Option"
+              required
+            />
+          </div>
+          <div class="mb-3 g-col-6">
+            <label for="options" class="form-label">Other Option</label>
+            <input
+              type="text"
+              name="options"
+              class="form-control"
+              id="options"
+              placeholder="Other Option"
+              required
+            />
+          </div>
+        </div>
+        <button class="btn btn-primary">Add Question</button>
+      </form>
+    </div>
+  </div>
 </body>
-    
