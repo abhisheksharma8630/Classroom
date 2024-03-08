@@ -2,4 +2,64 @@
 
 <body>
     <h1>You are a student</h1>
+    <div class="flex flex-col gap-2 ">
+        <p class="h3 mb-5">All Tests</p>
+        <div class="tests">
+          <% tests.forEach(element => { %>
+            <div class="card-body border rounded mb-2 p-2">
+            <p><%= element.title%></p>
+            <p class="card-text"><%= element.owner.displayName %></p>
+            <div>
+              <span>LiveAt:</span>
+              <div id="timer-container">
+                <p id="time" style="display: none"><%= element.liveAt%></p>
+                <p id="timer"></p>
+              </div>
+            </div>
+            <form action="/tests/<%= element._id%>?_method=Delete" method="post">
+              <button type="submit" class="btn btn-primary btn-sm">Attempt</button>
+            </form>
+          </div>
+          <% }) %>
+        </div>
 </body>
+
+<script>
+    let todayDateTest = new Date();
+  let todayTest = `${todayDateTest.getFullYear()}-0${
+    todayDateTest.getMonth() + 1
+  }-${todayDateTest.getDate()}`;
+
+  let allTime = document.querySelectorAll("#timer-container");
+  allTime.forEach((element) => {
+    let newDate = new Date(element.children[0].innerHTML).getTime();
+    var x = setInterval(function () {
+      // Get today's date and time
+      var now = new Date().getTime();
+
+      // Find the distance between now and the count down date
+      var distance = newDate - now;
+
+      // Time calculations for days, hours, minutes and seconds
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor(
+        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      // Display the result in the element with id="demo"
+      element.children[1].innerHTML =
+        days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+      // If the count down is finished, write some text
+      if (distance >= -60000 && distance <= 0) {
+        element.children[1].innerHTML = "LIVE";
+      }
+      if (distance < -60000) {
+        clearInterval(x);
+        element.children[1].innerHTML = "EXPIRED";
+      }
+    }, 1000);
+  });
+</script>

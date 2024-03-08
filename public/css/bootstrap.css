@@ -1,3 +1,4 @@
+
 .cursor-pointer{
     cursor: pointer;
 }
@@ -53,5 +54,35 @@
 .questions{
     height: 70vh;
     padding: 1rem;
-    overflow: scroll;
+    overflow-y: scroll;
+    word-wrap: break-word;
+}
+
+.card {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .card-img-overlay {
+    background-color: rgba(0, 0, 0, 0.1); /* Semi-transparent background */
+  }
+  
+  .card:hover .card-img-overlay {
+    background-color: rgba(0, 0, 0, 0); /* Fully transparent on hover */
+  }
+.card-img-overlay button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 1); /* Full opacity for the button */
+    /* border: none; */
+    border-radius: 5px;
+    color: black;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s ease;
+  }
+  
+.card:hover .card-img-overlay button{
+    opacity: 1;
 }

@@ -61,10 +61,16 @@ app.listen(3000, () => {
 })
 
 
-app.get('/', isTeacher,async (req, res) => {
-    const tests = await Test.find({}).populate({ path: 'owner' });
-    res.render('./test/newTest.ejs', { tests });
+app.get("/",(req,res)=>{
+    if(req.user && req.user.occupation == "teacher"){
+        res.redirect('/teacher');
+    }else if(req.user && req.user.occupation == "student"){
+        res.redirect('/student');
+    }else{
+        res.render('homepage.ejs');
+    }
 })
+
 
 app.get('/login', (req, res) => {
     res.render('./user/login.ejs');
@@ -76,9 +82,9 @@ app.get('/auth/google/callback', passport.authenticate('google', { scope: ['prof
     if(req.user && req.user.occupation == "none"){
         res.redirect('/occupation');
     }else if(req.user && req.user.occupation == "teacher"){
-        res.redirect('/');
+        res.redirect('/teacher');
     }else{
-        res.redirect('/student/homepage');
+        res.redirect('/student');
     }
 });
 
@@ -103,6 +109,8 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
 })
 
+
+
 app.get('/occupation',isLoggedIn,(req,res)=>{
     res.render("occupation.ejs");
 })
@@ -112,7 +120,7 @@ app.post('/occupation',isLoggedIn,async (req,res)=>{
         let updatedUser = await User.findOneAndUpdate({_id:req.user._id},{occupation:req.body.occupation});
         req.user = updatedUser;
     }
-
+0
     if(req.user.occupation=="teacher"){
         res.redirect("/");
     }else{
@@ -129,7 +137,7 @@ app.post('/signup', async (req, res) => {
         let { username, password, email, displayName,occupation } = req.body;
         const registerUser = await User.register({ username, email, displayName, occupation}, password);        
         req.login(registerUser, (err) => {
-            if (err) {
+            if(err) {
                 throw new Error(err);
             }
             if(req.user && req.user.occupation == 'teacher'){
@@ -146,8 +154,14 @@ app.post('/signup', async (req, res) => {
 
 // Student related API
 
-app.get("/student/homepage",isStudent,(req,res)=>{
-    res.render('./student/homepage');
+app.get("/student",isStudent, async(req,res)=>{
+    const tests = await Test.find({}).populate({ path: 'owner' });
+    res.render('./student/homepage',{tests});
+})
+
+app.get('/teacher',isLoggedIn,isTeacher,async (req, res) => {
+    const tests = await Test.find({}).populate({ path: 'owner' });
+    res.render('./teacher/newTest.ejs', { tests });
 })
 
 
@@ -158,7 +172,7 @@ app.get("/student/homepage",isStudent,(req,res)=>{
 // all tests
 
 
-app.post('/tests', isLoggedIn, async (req, res) => {
+app.post('/teacher/tests', isLoggedIn, async (req, res) => {
     if (req.body.title == 0) {
         res.status(400).send('please provide title');
     }
@@ -170,14 +184,13 @@ app.post('/tests', isLoggedIn, async (req, res) => {
     googleUser.tests.push(newtest);
     await googleUser.save();
     await newtest.save();
-    res.redirect('/');
+    res.redirect('/teacher');
 })
 
 
 app.delete('/tests/:id', isLoggedIn, isUser, async (req, res) => {
     const { id } = req.params;
     let temp = await test.findByIdAndDelete(id);
-    console.log(temp);
     await User.findByIdAndUpdate(temp.owner, { $pull: { tests: id } });
     console.log("deleted successfully");
     res.redirect('/');
@@ -186,15 +199,13 @@ app.delete('/tests/:id', isLoggedIn, isUser, async (req, res) => {
 app.get('/tests/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
     const test = await Test.findById(id).populate({ path: 'questions', populate: { path: "options" } });
-    console.log(test);
-    res.render('./test/test.ejs', { test });
+    res.render('./teacher/test.ejs', { test,question:false });
 })
 
 
 
 
 // add question to test
-
 
 app.post('/tests/:id/question', isLoggedIn, async (req, res) => {
     const { id } = req.params;
@@ -206,10 +217,26 @@ app.post('/tests/:id/question', isLoggedIn, async (req, res) => {
     res.redirect(`/tests/${id}`);
 })
 
+app.get('/tests/:testID/question/:questionID',async (req,res)=>{
+    let { testID, questionID} = req.params;
+    const test = await Test.findById(testID).populate({ path: 'questions', populate: { path: "options" } });
+    const question = await Question.findById(questionID).populate({path:'options'});
+    console.log(question);
+    res.render('./teacher/test.ejs', { test ,question});
+})
+
 app.delete('/tests/:testID/question/:questionID', isLoggedIn, async (req, res) => {
     const { testID, questionID } = req.params;
-    await Question.findByIdAndDelete(questionID);
-    res.status(200).json('yeah it worked');
+    await Test.findByIdAndUpdate(testID, { $pull: { questions: questionID } });
+    let temp = await Question.findByIdAndDelete(questionID);
+    res.redirect(`/tests/${testID}`)
+})
+
+app.patch('/tests/:testID/question/:questionID', isLoggedIn, async (req, res) => {
+    const { testID, questionID } = req.params;
+    let temp = await Question.findByIdAndUpdate(questionID,req.body);
+    console.log(temp)
+    res.redirect(`/tests/${testID}`)
 })
 
 app.post('/test/question', isLoggedIn, async (req, res) => {

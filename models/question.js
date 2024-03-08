@@ -6,6 +6,10 @@ const questionSchema = new Schema({
     correctAnswer:String,
     options:{
         type:Array,
+    },
+    test:{
+        type : Schema.Types.ObjectId,
+        ref : 'test'
     }
 })
 
