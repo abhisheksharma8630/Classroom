@@ -1,0 +1,20 @@
+<% layout("/layout/boilerplate") %>
+
+<body>
+    <form action="/occupation" method="post">
+        <fieldset>
+          <legend>Please select your preferred contact method:</legend>
+          <div>
+            <input type="radio" id="contactChoice1" name="occupation" value="student" />
+            <label for="contactChoice1">Student</label>
+      
+            <input type="radio" id="contactChoice2" name="occupation" value="teacher" />
+            <label for="contactChoice2">Teacher</label>
+          </div>
+          <div>
+            <button type="submit">Submit</button>
+          </div>
+        </fieldset>
+      </form>
+      
+</body>

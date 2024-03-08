@@ -23,7 +23,11 @@ const userSchema = new schema({
             type:schema.Types.ObjectId,
             ref:'test'
         }
-    ]
+    ],
+    occupation:{
+        type:String,
+        default:"none"
+    }
 })
 
 userSchema.plugin(passportLocalMongoose);

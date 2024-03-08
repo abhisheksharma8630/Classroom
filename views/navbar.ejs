@@ -19,26 +19,6 @@
             >Create Test</a
           >
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Dropdown
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
       </ul>
       <form class="d-flex" role="search">
         <input
@@ -55,12 +35,13 @@
           <a href=""><%= currUser.displayName%></a>
           <div class="sub-options bg-body-tertiary">
             <a href="">Profile</a>
-            <a href="">Logout</a>
+            <a href="/logout">Logout</a>
           </div>
         </li>
       </ul>
       <%}else{%>
-      <a href="/login" class="btn btn-primary ms-lg-2 mt-sm-2 mt-lg-0">Login</a>
+      <a href="/login" class="btn btn-secondary ms-lg-2 mt-sm-2 mt-lg-0">Login</a>
+      <a href="/signup" class="btn btn-primary ms-lg-2 mt-sm-2 mt-lg-0">Signup</a>
       <% } %>
     </div>
   </div>

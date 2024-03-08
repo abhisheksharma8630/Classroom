@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const app = express();
 const session = require('express-session');
@@ -13,6 +14,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const GoogleStrategy = require('passport-google-oauth20');
 const User = require('./models/user');
+const {isLoggedIn , isUser, isTeacher,isStudent} = require("./helper/middleware");
 
 
 
@@ -33,41 +35,11 @@ app.use(session({
         httpOnly: true,
     }
 }));
+
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
-passport.use(new GoogleStrategy({
-    clientID: "742797280040-l3vg9rbs72ea0573bnsgmmbd86c30mt5.apps.googleusercontent.com",
-    clientSecret: "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",
-    callbackURL: "http://localhost:3000/auth/google/callback",
-    scope: ["email", "profile"]
-},
-    async function (request, accessToken, refreshToken, profile, done) {
-        try {
-            let user = await User.findOne({ googleId: profile.id });
-            if (!user) {
-                const newUser = new User({
-                    googleId: profile.id,
-                    displayName: profile.displayName,
-                    email: profile.emails[0].value,
-                    username: profile.emails[0].value,
-                });
-                user = await newUser.save();
-            }
-            return done(null, user);
-        } catch (error) {
-            return done(error, null);
-        }
-    }));
-
-passport.serializeUser((user, done) => {
-    done(null, user);
-})
-passport.deserializeUser((user, done) => {
-    done(null, user);
-})
-
+require('./helper/auth');
 
 
 app.use((req, res, next) => {
@@ -88,32 +60,8 @@ app.listen(3000, () => {
     console.log("app is listening at port 3000");
 })
 
-const isLoggedIn = (req, res, next) => {
-    if (!req.isAuthenticated()) {
-        req.flash("error", "You should login first !");
-        return res.redirect("/");
-    } else {
-        next();
-    }
-}
 
-const isUser = async (req, res, next) => {
-    const { id } = req.params;
-    if (id && req.user) {
-        let testUser = await test.findById(id);
-        if (testUser.owner == req.user._id) {
-            next();
-        } else {
-            res.flash("error", "You are not the owner of the test");
-            next(new Error("Yeh user hai hi nahi"));
-        }
-    } else {
-        res.flash("error", "NO test exists!!");
-        next();
-    }
-}
-
-app.get('/', async (req, res) => {
+app.get('/', isTeacher,async (req, res) => {
     const tests = await Test.find({}).populate({ path: 'owner' });
     res.render('./test/newTest.ejs', { tests });
 })
@@ -125,12 +73,22 @@ app.get('/login', (req, res) => {
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 app.get('/auth/google/callback', passport.authenticate('google', { scope: ['profile', 'email'] }), function (req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/');
+    if(req.user && req.user.occupation == "none"){
+        res.redirect('/occupation');
+    }else if(req.user && req.user.occupation == "teacher"){
+        res.redirect('/');
+    }else{
+        res.redirect('/student/homepage');
+    }
 });
 
 app.post('/login', passport.authenticate("local", { failureRedirect: '/' }), (req, res) => {
-    res.redirect('/');
+    req.flash("success","Successfully logged in");
+    if(req.user &&  req.user.occupation == 'teacher'){
+        res.redirect('/');
+    }else{
+        res.redirect('/student/homepage');
+    }
 })
 
 
@@ -141,8 +99,25 @@ app.get('/logout', (req, res) => {
             console.log(err);
         }
     });
-    req.flash("success", "Successfully Logout");
+    req.flash("error", "Successfully Logout");
     res.redirect('/');
+})
+
+app.get('/occupation',isLoggedIn,(req,res)=>{
+    res.render("occupation.ejs");
+})
+
+app.post('/occupation',isLoggedIn,async (req,res)=>{
+    if(req.user && req.user.occupation == "none"){
+        let updatedUser = await User.findOneAndUpdate({_id:req.user._id},{occupation:req.body.occupation});
+        req.user = updatedUser;
+    }
+
+    if(req.user.occupation=="teacher"){
+        res.redirect("/");
+    }else{
+        res.redirect("/student/homepage");
+    }
 })
 
 app.get('/signup', (req, res) => {
@@ -151,19 +126,31 @@ app.get('/signup', (req, res) => {
 
 app.post('/signup', async (req, res) => {
     try {
-        const { username, password, email, displayName } = req.body;
-        const registerUser = await User.register({ username, email, displayName }, password);
+        let { username, password, email, displayName,occupation } = req.body;
+        const registerUser = await User.register({ username, email, displayName, occupation}, password);        
         req.login(registerUser, (err) => {
             if (err) {
                 throw new Error(err);
             }
-            res.redirect('/tests');
+            if(req.user && req.user.occupation == 'teacher'){
+                res.redirect('/');
+            }else{
+                res.redirect('/student/homepage');
+            }
         });
     } catch (e) {
         console.log(e)
         res.status(400).json('something broke');
     }
 })
+
+// Student related API
+
+app.get("/student/homepage",isStudent,(req,res)=>{
+    res.render('./student/homepage');
+})
+
+
 
 // test related apis
 
