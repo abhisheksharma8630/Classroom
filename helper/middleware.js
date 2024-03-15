@@ -16,11 +16,11 @@ module.exports.isUser = async (req, res, next) => {
         if (testUser.owner == req.user._id) {
             next();
         } else {
-            res.flash("error", "You are not the owner of the test");
+            req.flash("error", "You are not the owner of the test");
             next(new Error("Yeh user hai hi nahi"));
         }
     } else {
-        res.flash("error", "NO test exists!!");
+        req.flash("error", "NO test exists!!");
         next();
     }
 }
@@ -38,4 +38,32 @@ module.exports.isStudent = (req,res,next)=>{
     }else{
         next();
     }
+}
+
+let generateUniqueCode = ()=>{
+    return Math.floor(100000 + Math.random() * 900000); // Generates a random 6-digit number
+}
+
+let isCodeUnique= async (code)=>{
+    const count = await Test.countDocuments({testCode:code});
+    return count === 0;
+}
+
+// isCodeUnique(123121);
+
+module.exports.getSixDigitCode = async()=>{
+    let code;
+    do {
+        code = generateUniqueCode();
+    } while (!await isCodeUnique(code));
+
+    return code;
+}
+
+module.exports.shuffleArray=(array)=>{
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    }
+    return array;
 }

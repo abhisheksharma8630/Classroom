@@ -7,9 +7,10 @@
     <div class="tests">
       <% tests.forEach(element => { %>
         <div class="card-body border rounded mb-2 p-2">
-        <a href="/tests/<%=element._id%>" class="card-title"
+        <a href="/teacher/tests/<%=element._id%>" class="card-title"
           ><%= element.title%></a
         >
+        <p><%=element.testCode%></p>
         <p class="card-text"><%= element.owner.displayName %></p>
         <div>
           <span>LiveAt:</span>

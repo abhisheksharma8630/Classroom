@@ -27,7 +27,13 @@ const userSchema = new schema({
     occupation:{
         type:String,
         default:"none"
-    }
+    },
+    attended:[
+        {
+            type:schema.Types.ObjectId,
+            ref:'test'
+        }
+    ]
 })
 
 userSchema.plugin(passportLocalMongoose);

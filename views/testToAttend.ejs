@@ -1,0 +1,111 @@
+<% layout('/layout/boilerplate') %>
+<style>
+  body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+  }
+  
+  .quiz-container {
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+  }
+  
+  .question {
+      font-size: 20px;
+      margin-bottom: 20px;
+  }
+  
+  .options {
+      list-style-type: none;
+      padding: 0;
+  }
+  
+  .option {
+      margin-bottom: 10px;
+  }
+  
+  .option input[type="radio"] {
+      margin-right: 10px;
+      cursor: pointer;
+  }
+  .option label{
+    cursor: pointer;
+  }
+  
+  .submit-btn {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+      margin: auto;
+  }
+  
+  .submit-btn:hover {
+      background-color: #0056b3;
+  }
+  .text-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 300px; /* Adjust width as needed */
+}
+
+/* Style when the input is focused */
+.text-input:focus {
+    outline: none;
+    border-color: #007bff; /* Change color when focused */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add a box shadow when focused */
+}
+
+/* Style when the input is hovered */
+.text-input:hover {
+    border-color: #999; /* Change color when hovered */
+}
+
+/* Style placeholder text */
+.text-input::placeholder {
+    color: #999; /* Change placeholder color */
+}
+  </style>
+
+<body>
+  <form action="/tests?testId=<%=test._id%>" method="post">
+    <% test.questions.forEach((ques,index)=>{ %>
+    <div class="quiz-container">
+      <div class="question"><%=index+1%>. <%= ques.question %></div>
+      <ul class="options">
+        <li class="option">
+          <input id="<%=ques.options[0]%>" type="radio" name="<%= ques._id%>" value="<%=ques.options[0]%>" required/>
+          <label for="<%=ques.options[0]%>"><%=ques.options[0]%></label>
+        </li>
+        <li class="option">
+          <input id="<%=ques.options[1]%>" type="radio" name="<%= ques._id%>" value="<%=ques.options[1]%>"/>
+          <label for="<%=ques.options[1]%>"><%=ques.options[1]%></label>
+        </li>
+        <li class="option">
+          <input id="<%=ques.options[2]%>" type="radio" name="<%= ques._id%>" value="<%=ques.options[2]%>"/>
+          <label for="<%=ques.options[2]%>"><%=ques.options[2]%></label>
+        </li>
+        <li class="option">
+          <input id="<%=ques.options[3]%>" type="radio" name="<%= ques._id%>" value="<%=ques.options[3]%>"/>
+          <label for="<%=ques.options[3]%>"><%=ques.options[3]%></label>
+        </li>
+      </ul>
+    </div>
+    <% }) %>
+    <div class="quiz-container">
+      <input type="text" class="text-input" name="attendee" placeholder="Enter Your Name here..." required>
+      <button class="submit-btn">Submit</button>
+    </div>
+  </form>
+</body>

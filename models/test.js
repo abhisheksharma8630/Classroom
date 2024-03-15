@@ -19,7 +19,20 @@ const testSchema = new Schema({
     },
     liveAt:{
         type:Date
-    }
+    },
+    testCode:{
+        type:String,
+        unique:true
+    },
+    attendees:[
+        {
+            user:{
+                type:Schema.Types.ObjectId,
+                ref:'User'
+            },
+            marks:Number
+        }
+    ]
 })
 
 testSchema.post('findOneAndDelete', async (test)=>{

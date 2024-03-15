@@ -14,7 +14,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const GoogleStrategy = require('passport-google-oauth20');
 const User = require('./models/user');
-const {isLoggedIn , isUser, isTeacher,isStudent} = require("./helper/middleware");
+const {isLoggedIn , isUser, isTeacher,isStudent ,getSixDigitCode, shuffleArray} = require("./helper/middleware");
 
 
 
@@ -171,6 +171,35 @@ app.get('/teacher',isLoggedIn,isTeacher,async (req, res) => {
 
 // all tests
 
+app.get('/tests',isLoggedIn,async(req,res)=>{
+    let { code } = req.query;
+    let test = await Test.findOne({testCode:code}).populate({path: 'questions', populate: { path: "options" } });
+    if(test){
+        res.render('testToAttend',{test});
+    }else{
+        res.json("no such test exits");
+    }
+})
+
+app.post('/tests',isLoggedIn,async(req,res)=>{
+    let {testId} = req.query;
+    let {attendee} = req.body;
+    let totalMarks = 0;
+    let attemptedQuestions = req.body;
+    delete attemptedQuestions['attendee'];
+    for(let key in attemptedQuestions){
+        let attQuestion = await Question.findById(key);
+        if(attQuestion.correctAnswer == attemptedQuestions[key]){
+            totalMarks++;
+        }
+    }
+    let attemptedTest = await Test.findById(testId);
+    attemptedTest.attendees.push({user:req.user,name:attendee,marks:totalMarks});
+    
+    let temp = await attemptedTest.save();
+    console.log(temp);
+})
+
 
 app.post('/teacher/tests', isLoggedIn, async (req, res) => {
     if (req.body.title == 0) {
@@ -178,7 +207,9 @@ app.post('/teacher/tests', isLoggedIn, async (req, res) => {
     }
     const googleUser = await User.findOne({ _id: req.user._id });
     let testBody = req.body;
-    testBody = { title: req.body.title, liveAt: new Date(req.body.date) };
+    let code = await getSixDigitCode ();
+    console.log(code);
+    testBody = { title: req.body.title, liveAt: new Date(req.body.date),testCode:code};
     const newtest = new Test(testBody);
     newtest.owner = googleUser._id;
     googleUser.tests.push(newtest);
@@ -196,7 +227,7 @@ app.delete('/tests/:id', isLoggedIn, isUser, async (req, res) => {
     res.redirect('/');
 })
 
-app.get('/tests/:id', isLoggedIn, async (req, res) => {
+app.get('/teacher/tests/:id', isLoggedIn,isUser, async (req, res) => {
     const { id } = req.params;
     const test = await Test.findById(id).populate({ path: 'questions', populate: { path: "options" } });
     res.render('./teacher/test.ejs', { test,question:false });
@@ -210,17 +241,27 @@ app.get('/tests/:id', isLoggedIn, async (req, res) => {
 app.post('/tests/:id/question', isLoggedIn, async (req, res) => {
     const { id } = req.params;
     const test = await Test.findById(id);
-    const newQues = new Question(req.body);
+    let {question,options} = req.body;
+    let correctAnswer = options[0];
+    options = shuffleArray(options);
+    const newQues = new Question({question,options,correctAnswer,test:id});
+    console.log(newQues);
     test.questions.push(newQues);
     await test.save();
     await newQues.save();
-    res.redirect(`/tests/${id}`);
+    res.redirect(`/teacher/tests/${id}`);
 })
 
 app.get('/tests/:testID/question/:questionID',async (req,res)=>{
     let { testID, questionID} = req.params;
     const test = await Test.findById(testID).populate({ path: 'questions', populate: { path: "options" } });
     const question = await Question.findById(questionID).populate({path:'options'});
+    for(let i=1;i<4;i++){
+        if(question.options[i]== question.correctAnswer){
+            question.options[i] = question.options[0];
+            question.options[0] = question.correctAnswer;
+        }
+    }
     console.log(question);
     res.render('./teacher/test.ejs', { test ,question});
 })
@@ -234,9 +275,12 @@ app.delete('/tests/:testID/question/:questionID', isLoggedIn, async (req, res) =
 
 app.patch('/tests/:testID/question/:questionID', isLoggedIn, async (req, res) => {
     const { testID, questionID } = req.params;
-    let temp = await Question.findByIdAndUpdate(questionID,req.body);
+    let {question,options } = req.body;
+    let correctAnswer = options[0];
+    options = shuffleArray(options);
+    let temp = await Question.findByIdAndUpdate(questionID,{question,correctAnswer,options});
     console.log(temp)
-    res.redirect(`/tests/${testID}`)
+    res.redirect(`/teacher/tests/${testID}`)
 })
 
 app.post('/test/question', isLoggedIn, async (req, res) => {

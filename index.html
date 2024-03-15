@@ -3,57 +3,70 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Overlay with Edit Button</title>
+<title>Quiz</title>
 <style>
-
-  .container {
-  position: relative;
-  display: inline-block;
-}
-
-.card-img-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.2); /* Semi-transparent background */
-  pointer-events: none; /* Ensures that clicks on the overlay pass through to the image */
-}
-
-.container:hover .card-img-overlay {
-  background-color: rgba(0, 0, 0, 0); /* Fully transparent on hover */
-}
-
-.card-img-overlay button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 5px 10px;
-  background-color: rgba(255, 255, 255, 1); /* Full opacity for the button */
-  border: none;
+.custom-alert {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  color: black;
-  opacity: 0; /* Initially hidden */
-  transition: opacity 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.container:hover .card-img-overlay button {
-  opacity: 1; /* Show the button on hover */
+.custom-alert-content {
+  text-align: center;
+}
+
+.custom-alert-close {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.custom-alert button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.custom-alert button:hover {
+  background-color: #0056b3;
 }
 
 </style>
 </head>
 <body>
-
-
-<div class="container">
-  <img src="./public/image1.jpg" alt="Image">
-  <div class="card-img-overlay">
-    <button>edit</button>
-  </div>
-</div>
-
-
+    <div class="custom-alert" id="customAlert">
+        <div class="custom-alert-content">
+          <span class="custom-alert-close" onclick="closeAlert()">&times;</span>
+          <p id="alertMessage">This is a custom alert message.</p>
+          <button onclick="closeAlert()">OK</button>
+        </div>
+      </div>      
 </body>
+<script>
+    function showAlert(message) {
+  document.getElementById("alertMessage").innerText = message;
+  document.getElementById("customAlert").style.display = "block";
+}
+
+function closeAlert() {
+  document.getElementById("customAlert").style.display = "none";
+}
+
+// Example usage
+showAlert("This is a custom alert message.");
+
+</script>
 </html>

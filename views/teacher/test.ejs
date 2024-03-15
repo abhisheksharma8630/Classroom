@@ -10,13 +10,14 @@
             <div class="card-img mb-3 border p-3 rounded"> 
               <span class="h5">Question: </span><p class="h6 d-inline"></p><%= element.question%></p>
               <div class="d-flex row justify-content-evenly">
-                <p class="btn btn-success col-4"><%= element.correctAnswer%></p>
-                <p class="btn btn-secondary col-4" ><%= element.options[0]%></p>
+                <p class="btn btn-secondary col-4"><%=element.options[0]%></p>
+                <p class="btn btn-secondary col-4" ><%= element.options[1]%></p>
               </div>
               <div class="d-flex row justify-content-evenly">
-                <p class="btn btn-secondary col-4"><%= element.options[1]%></p>
                 <p class="btn btn-secondary col-4"><%= element.options[2]%></p>
+                <p class="btn btn-secondary col-4"><%= element.options[3]%></p>
               </div>
+              <p>Correct Answer : <span class="fw-bold"><%= element.correctAnswer%></span></p>
             </div>
             <div class="card-img-overlay mb-3">
               <form action="/tests/<%=test?._id%>/question/<%=element._id%>" method="get">
@@ -51,22 +52,10 @@
               <label for="correctAnswer" class="form-label">Correct Answer</label>
               <input
                 type="text"
-                name="correctAnswer"
+                name="options"
                 class="form-control"
                 id="correctAnswer"
                 placeholder="Correct Answer"
-                required
-                value="<%= question.correctAnswer%>"
-              />
-            </div>
-            <div class="mb-3 g-col-6">
-              <label for="options" class="form-label">Other Option</label>
-              <input
-                type="text"
-                name="options"
-                class="form-control"
-                id="options"
-                placeholder="Other Option"
                 required
                 value="<%= question.options[0]%>"
               />
@@ -79,8 +68,8 @@
                 class="form-control"
                 id="options"
                 placeholder="Other Option"
-                value="<%= question.options[1]%>"
                 required
+                value="<%= question.options[1]%>"
               />
             </div>
             <div class="mb-3 g-col-6">
@@ -92,6 +81,18 @@
                 id="options"
                 placeholder="Other Option"
                 value="<%= question.options[2]%>"
+                required
+              />
+            </div>
+            <div class="mb-3 g-col-6">
+              <label for="options" class="form-label">Other Option</label>
+              <input
+                type="text"
+                name="options"
+                class="form-control"
+                id="options"
+                placeholder="Other Option"
+                value="<%= question.options[3]%>"
                 required
               />
             </div>
@@ -119,7 +120,7 @@
               <label for="correctAnswer" class="form-label">Correct Answer</label>
               <input
                 type="text"
-                name="correctAnswer"
+                name="options"
                 class="form-control"
                 id="correctAnswer"
                 placeholder="Correct Answer"
