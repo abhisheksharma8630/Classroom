@@ -30,6 +30,7 @@ const testSchema = new Schema({
                 type:Schema.Types.ObjectId,
                 ref:'User'
             },
+            name:String,
             marks:Number
         }
     ]

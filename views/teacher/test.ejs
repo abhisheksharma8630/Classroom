@@ -5,166 +5,217 @@
     <div class="bg-red-700 w-50">
       <p class="cursor-pointer h3 mb-5"><%= test?.title%></p>
       <div class="questions">
-        <% test?.questions.forEach((element)=>{ %>
-          <div class="card border-0">
-            <div class="card-img mb-3 border p-3 rounded"> 
-              <span class="h5">Question: </span><p class="h6 d-inline"></p><%= element.question%></p>
-              <div class="d-flex row justify-content-evenly">
-                <p class="btn btn-secondary col-4"><%=element.options[0]%></p>
-                <p class="btn btn-secondary col-4" ><%= element.options[1]%></p>
-              </div>
-              <div class="d-flex row justify-content-evenly">
-                <p class="btn btn-secondary col-4"><%= element.options[2]%></p>
-                <p class="btn btn-secondary col-4"><%= element.options[3]%></p>
-              </div>
-              <p>Correct Answer : <span class="fw-bold"><%= element.correctAnswer%></span></p>
+        <% test?.questions.forEach((element,index)=>{ %>
+        <div class="card border-0">
+          <div class="card-img mb-3 border p-3 rounded">
+            <div class="mb-2">
+              <span class="h5">Question <%= index+1 %> : </span> <%=
+              element.question%>
             </div>
-            <div class="card-img-overlay mb-3">
-              <form action="/tests/<%=test?._id%>/question/<%=element._id%>" method="get">
-                <button class="btn btn-primary btn-sm" style="right: 6rem;"><i class="fa-regular me-2 fa-pen-to-square"></i>edit</button>
-              </form>
-              <form action="/tests/<%=test?._id%>/question/<%=element._id%>?_method=Delete" method="post">
-                <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can me-2"></i>delete</button>
-              </form>
+            <div class="d-flex row justify-content-evenly">
+              <p class="btn btn-secondary col-4"><%=element.options[0]%></p>
+              <p class="btn btn-secondary col-4"><%= element.options[1]%></p>
             </div>
+            <div class="d-flex row justify-content-evenly">
+              <p class="btn btn-secondary col-4"><%= element.options[2]%></p>
+              <p class="btn btn-secondary col-4"><%= element.options[3]%></p>
+            </div>
+            <p>
+              Correct Answer :
+              <span class="fw-bold"><%= element.correctAnswer%></span>
+            </p>
           </div>
+          <div class="card-img-overlay mb-3">
+            <form
+              action="/tests/<%=test?._id%>/question/<%=element._id%>"
+              method="get"
+            >
+              <button class="btn btn-primary btn-sm" style="right: 6rem">
+                <i class="fa-regular me-2 fa-pen-to-square"></i>edit
+              </button>
+            </form>
+            <form
+              action="/tests/<%=test?._id%>/question/<%=element._id%>?_method=Delete"
+              method="post"
+            >
+              <button class="btn btn-danger btn-sm">
+                <i class="fa-solid fa-trash-can me-2"></i>delete
+              </button>
+            </form>
+          </div>
+        </div>
         <%})%>
       </div>
     </div>
-    <div class="border-end-1 border border-tertiary mt-5" style="height: 500px;"></div>
+    <div
+      class="border-end-1 border border-tertiary mt-5"
+      style="height: 500px"
+    ></div>
     <% if(question) {%>
-      <div>
-        <h3>Edit Question</h3>
-        <form action="/tests/<%=test?._id%>/question/<%=question?._id%>/?_method=Patch" method="post">
-          <div class="mb-3">
-            <label for="question" class="form-label">Question</label>
-            <textarea class="form-control" id="question" name="question" rows="5" placeholder="Type your Question here ... "  required><%= question.question%></textarea>
-          </div>
-          <div
-            class="grid"
-            style="
-              display: grid;
-              grid-template-columns: repeat(2, 1fr);
-              grid-gap: 10px;
-            "
+    <div>
+      <h3>Edit Question</h3>
+      <form
+        action="/tests/<%=test?._id%>/question/<%=question?._id%>/?_method=Patch"
+        method="post"
+      >
+        <div class="mb-3">
+          <label for="question" class="form-label">Question</label>
+          <textarea
+            class="form-control"
+            id="question"
+            name="question"
+            rows="5"
+            placeholder="Type your Question here ... "
+            required
           >
-            <div class="mb-3 g-col-6">
-              <label for="correctAnswer" class="form-label">Correct Answer</label>
-              <input
-                type="text"
-                name="options"
-                class="form-control"
-                id="correctAnswer"
-                placeholder="Correct Answer"
-                required
-                value="<%= question.options[0]%>"
-              />
-            </div>
-            <div class="mb-3 g-col-6">
-              <label for="options" class="form-label">Other Option</label>
-              <input
-                type="text"
-                name="options"
-                class="form-control"
-                id="options"
-                placeholder="Other Option"
-                required
-                value="<%= question.options[1]%>"
-              />
-            </div>
-            <div class="mb-3 g-col-6">
-              <label for="options" class="form-label">Other Option</label>
-              <input
-                type="text"
-                name="options"
-                class="form-control"
-                id="options"
-                placeholder="Other Option"
-                value="<%= question.options[2]%>"
-                required
-              />
-            </div>
-            <div class="mb-3 g-col-6">
-              <label for="options" class="form-label">Other Option</label>
-              <input
-                type="text"
-                name="options"
-                class="form-control"
-                id="options"
-                placeholder="Other Option"
-                value="<%= question.options[3]%>"
-                required
-              />
-            </div>
+<%= question.question%></textarea
+          >
+        </div>
+        <div
+          class="grid"
+          style="
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 10px;
+          "
+        >
+          <div class="mb-3 g-col-6">
+            <label for="correctAnswer" class="form-label">Correct Answer</label>
+            <input
+              type="text"
+              name="options"
+              class="form-control"
+              id="correctAnswer"
+              placeholder="Correct Answer"
+              required
+              value="<%= question.options[0]%>"
+            />
           </div>
-          <button class="btn btn-success">Save</button>
-        </form>
-      </div>
+          <div class="mb-3 g-col-6">
+            <label for="options" class="form-label">Other Option</label>
+            <input
+              type="text"
+              name="options"
+              class="form-control"
+              id="options"
+              placeholder="Other Option"
+              required
+              value="<%= question.options[1]%>"
+            />
+          </div>
+          <div class="mb-3 g-col-6">
+            <label for="options" class="form-label">Other Option</label>
+            <input
+              type="text"
+              name="options"
+              class="form-control"
+              id="options"
+              placeholder="Other Option"
+              value="<%= question.options[2]%>"
+              required
+            />
+          </div>
+          <div class="mb-3 g-col-6">
+            <label for="options" class="form-label">Other Option</label>
+            <input
+              type="text"
+              name="options"
+              class="form-control"
+              id="options"
+              placeholder="Other Option"
+              value="<%= question.options[3]%>"
+              required
+            />
+          </div>
+        </div>
+        <button class="btn btn-success">Save</button>
+      </form>
+    </div>
     <% }else{ %>
-      <div>
-        <h3>Add Question</h3>
-        <form action="/tests/<%=test?._id%>/question" method="post">
-          <div class="mb-3">
-            <label for="question" class="form-label">Question</label>
-            <textarea class="form-control" id="question" name="question" rows="2" placeholder="Type your Question here ..." required></textarea>
+    <div>
+      <h3>Add Question</h3>
+      <form action="/tests/<%=test?._id%>/question" method="post">
+        <div class="mb-3">
+          <label for="question" class="form-label">Question</label>
+          <textarea
+            class="form-control"
+            id="question"
+            name="question"
+            rows="2"
+            placeholder="Type your Question here ..."
+            required
+          ></textarea>
+        </div>
+        <div
+          class="grid"
+          style="
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 10px;
+          "
+        >
+          <div class="mb-3 g-col-6">
+            <label for="correctAnswer" class="form-label">Correct Answer</label>
+            <input
+              type="text"
+              name="options"
+              class="form-control"
+              id="correctAnswer"
+              placeholder="Correct Answer"
+              required
+            />
           </div>
-          <div
-            class="grid"
-            style="
-              display: grid;
-              grid-template-columns: repeat(2, 1fr);
-              grid-gap: 10px;
-            "
-          >
-            <div class="mb-3 g-col-6">
-              <label for="correctAnswer" class="form-label">Correct Answer</label>
-              <input
-                type="text"
-                name="options"
-                class="form-control"
-                id="correctAnswer"
-                placeholder="Correct Answer"
-                required
-              />
-            </div>
-            <div class="mb-3 g-col-6">
-              <label for="options" class="form-label">Other Option</label>
-              <input
-                type="text"
-                name="options"
-                class="form-control"
-                id="options"
-                placeholder="Other Option"
-                required
-              />
-            </div>
-            <div class="mb-3 g-col-6">
-              <label for="options" class="form-label">Other Option</label>
-              <input
-                type="text"
-                name="options"
-                class="form-control"
-                id="options"
-                placeholder="Other Option"
-                required
-              />
-            </div>
-            <div class="mb-3 g-col-6">
-              <label for="options" class="form-label">Other Option</label>
-              <input
-                type="text"
-                name="options"
-                class="form-control"
-                id="options"
-                placeholder="Other Option"
-                required
-              />
-            </div>
+          <div class="mb-3 g-col-6">
+            <label for="options" class="form-label">Other Option</label>
+            <input
+              type="text"
+              name="options"
+              class="form-control"
+              id="options"
+              placeholder="Other Option"
+              required
+            />
           </div>
-          <button class="btn btn-success">Save</button>
-        </form>
+          <div class="mb-3 g-col-6">
+            <label for="options" class="form-label">Other Option</label>
+            <input
+              type="text"
+              name="options"
+              class="form-control"
+              id="options"
+              placeholder="Other Option"
+              required
+            />
+          </div>
+          <div class="mb-3 g-col-6">
+            <label for="options" class="form-label">Other Option</label>
+            <input
+              type="text"
+              name="options"
+              class="form-control"
+              id="options"
+              placeholder="Other Option"
+              required
+            />
+          </div>
+        </div>
+        <button class="btn btn-success">Save</button>
+      </form>
+      <div class="">
+        <p>People Who Attend the test</p>
+        <div class="d-flex row">
+          <p class="col-1">Sr</p>
+          <p class="col-8">Name</p>
+          <p class="col-3">Marks</p>
+        </div>
+        <% test?.attendees?.forEach((attendee,index)=>{ %>
+          <div class="d-flex row">
+            <p class="col-1"><%= index + 1%>.</p>
+            <p class="col-8"><%= attendee.name %></p>
+            <p class="col-3"><%= attendee.marks %></p>
+          </div>
+        <% }) %> <% } %>
       </div>
-    <% } %>
-      
+    </div>
   </div>
 </body>

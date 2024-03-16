@@ -195,9 +195,12 @@ app.post('/tests',isLoggedIn,async(req,res)=>{
     }
     let attemptedTest = await Test.findById(testId);
     attemptedTest.attendees.push({user:req.user,name:attendee,marks:totalMarks});
-    
+    let userWhoAttended = await User.findById(req?.user._id);
+    userWhoAttended.attended.push(attemptedTest._id);
+    let temp1 = await userWhoAttended.save();
     let temp = await attemptedTest.save();
-    console.log(temp);
+    // res.json({"user":temp1,"test":temp});
+    res.redirect('/');
 })
 
 
@@ -227,9 +230,10 @@ app.delete('/tests/:id', isLoggedIn, isUser, async (req, res) => {
     res.redirect('/');
 })
 
-app.get('/teacher/tests/:id', isLoggedIn,isUser, async (req, res) => {
+app.get('/teacher/tests/:id',isLoggedIn,isUser,async (req, res) => {
     const { id } = req.params;
     const test = await Test.findById(id).populate({ path: 'questions', populate: { path: "options" } });
+    console.log(test);
     res.render('./teacher/test.ejs', { test,question:false });
 })
 
